@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>BulkDataEntry</members>
+        <members>CTRL_BatchEntry</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>BatchEntry</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>BulkDataEntry__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>TypeAhead</members>
+        <members>jquery_ui_datepicker</members>
+        <name>StaticResource</name>
+    </types>
+    <version>20.0</version>
+</Package>
