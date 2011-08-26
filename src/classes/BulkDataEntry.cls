@@ -74,7 +74,7 @@ public class BulkDataEntry {
 		try{
 			if(pObjectName != null){
 				try {
-					String s = Describe.getObjectLabel(pObjectName);
+					String s = DescribeHelper.getObjectLabel(pObjectName); 
 					isValidObject=true;
 				} catch (exception e) {
 					isValidObject=false;
@@ -168,7 +168,7 @@ public class BulkDataEntry {
 	}
 	
 	private boolean checkLookupExists() {
-		Map<String, Schema.DescribeFieldResult> allFieldsMap = Describe.getAllFieldsDescribe(this.objectName);
+		Map<String, Schema.DescribeFieldResult> allFieldsMap = DescribeHelper.getAllFieldsDescribe(this.objectName);
 		for(Schema.DescribeFieldResult fr: allFieldsMap.values()) {
 			if(fr.getType() == Schema.Displaytype.Reference) {
 				Schema.sObjectType parent = fr.getReferenceTo()[0];
@@ -182,15 +182,17 @@ public class BulkDataEntry {
 	}
 	
 	static testMethod void testBulkDataEntry(){
-		BulkDataEntry__c bulkDataEntry;
+		BulkDataEntry__c bulkDataEntrySetting;
 		BulkDataEntry bde;
 		Set<String> testSet;
 		
-		bulkDataEntry = new BulkDataEntry__c(Name = 'Test',
+		bulkDataEntrySetting = new BulkDataEntry__c(Name = 'Contact',
 											 Object_Entry_Field_Set__c = 'Test,Field,Set',
 											 Object_List_Field_Set__c = 'Test,List,Field,Set',
 											 Object_Default_Field_Set__c = 'Test,Default,Field,Set',
 											 Save_Batch__c = true);
+											 
+		delete [select id from BulkDataEntry__c];
 											 
 		//testing before the insert of a record
 		bde = new BulkDataEntry(System.now().format());
@@ -200,7 +202,7 @@ public class BulkDataEntry {
 		bde = new BulkDataEntry(null);
 		System.assert(bde.getStatusMessage().contains('Success'));
 		
-		insert bulkDataEntry;
+		insert bulkDataEntrySetting;
 		
 		testSet = new Set<String>();
 		testSet.add('Test');
@@ -208,23 +210,24 @@ public class BulkDataEntry {
 		testSet.add('Field');
 		testSet.add('Set');
 				
-		bde = new BulkDataEntry('Test');
-		bulkDataEntry = bde.getBulkCustomSetting();
-		System.assertEquals('Test', bde.getObjectName());
+		bde = new BulkDataEntry('Contact');
+		bulkDataEntrySetting = bde.getBulkCustomSetting();
+		System.assertEquals('Contact', bde.getObjectName());
 		System.assertNotEquals(null, bde.getEntryFieldList());
 		System.assertNotEquals(null, bde.getListFieldList());		
 		System.assert(bde.getSaveBatch());
 		System.assertEquals('Success', bde.getStatusMessage());
 		System.assert(bde.getFieldSet().contains('Test'));
-		System.assertEquals('select Id, Test, Field, Set, List from Test ', bde.getQueryString());
-		
+		System.assertEquals('select Id, Test, Field, Set, List from Contact ', bde.getQueryString());
+		/*
 		bde = new BulkDataEntry(null);
-		bulkDataEntry = bde.getBulkCustomSetting();
-		System.assertEquals('Test', bde.getObjectName());
+		bulkDataEntrySetting = bde.getBulkCustomSetting();
+		System.assertEquals('Contact', bde.getObjectName());
 		System.assertNotEquals(null, bde.getEntryFieldList());
 		System.assertNotEquals(null, bde.getListFieldList());
 		System.assert(bde.getSaveBatch());
 		System.assertEquals('Success', bde.getStatusMessage());
+		*/
 	}
 	
 	static testMethod void testBulkDataEntryWithInvalidObject(){

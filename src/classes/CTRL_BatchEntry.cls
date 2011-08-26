@@ -74,7 +74,7 @@ public with sharing class CTRL_BatchEntry {
 	                        displayBatchSection = bde.getSaveBatch();                       
 	                        displayRecInfoSection = true;
 	                        
-	                        String pluralName = Describe.getObjectDescribe(objname).getLabelPlural();
+	                        String pluralName = DescribeHelper.getObjectDescribe(objname).getLabelPlural();
 	                        pageSubtitle = pluralName;
 	                                                
 	                        entryFieldList = new list<EntryField>();
@@ -103,7 +103,7 @@ public with sharing class CTRL_BatchEntry {
                         } else {
                         	objectSettingsList = new List<SelectOption>();
                         	for(BulkDataEntry__c b : bde.getBulkCustomSettingsList()) {
-                        		objectSettingsList.add(new SelectOption(b.Name, Describe.getObjectDescribe(b.Name).getLabel()));
+                        		objectSettingsList.add(new SelectOption(b.Name, DescribeHelper.getObjectDescribe(b.Name).getLabel()));
                         	}
                         	pageSubtitle = 'Batch Data Entry Home';
                         	displaySettingsSection = true;
@@ -124,7 +124,7 @@ public with sharing class CTRL_BatchEntry {
                         
             	public entryField(string obj, string fld) {
                 	fieldName = fld;
-                    fieldLabel = Describe.getFieldLabel(obj, fld);
+                    fieldLabel = DescribeHelper.getFieldLabel(obj, fld);
                     if(fieldName.toUpperCase().endsWith('ID') && fieldLabel.toUpperCase().endsWith('ID'))     
                     	fieldLabel=fieldLabel.substring(0, fieldLabel.length()-2);               
                 }
@@ -138,7 +138,7 @@ public with sharing class CTRL_BatchEntry {
                 
                 public BatchItem(CTRL_BatchEntry parentClass) {
                         mydad = parentClass;       
-                        sobj = Describe.getPrototypeObject(mydad.objname); //this line needs to be outside the check for displayBatchSection or we get an error on page load for any object where !displayBatchSection          
+                        sobj = DescribeHelper.getPrototypeObject(mydad.objname); //this line needs to be outside the check for displayBatchSection or we get an error on page load for any object where !displayBatchSection          
                         if (mydad.displayBatchSection) {
                             sobj.put(mydad.batchLookupField, parentClass.batch.id);
                         }
@@ -223,7 +223,7 @@ public with sharing class CTRL_BatchEntry {
         }
         
         public pageReference createBatchSetting() {
-        	String id = Describe.getObjectDescribe(String.valueOf(BulkDataEntry__c.sObjectType)).getKeyPrefix();        	
+        	String id = DescribeHelper.getObjectDescribe(String.valueOf(BulkDataEntry__c.sObjectType)).getKeyPrefix();        	
         	PageReference pageRef = new PageReference('/setup/ui/editCustomSettingsData.apexp');
         	pageRef.getParameters().put('id', id);
         	pageRef.getParameters().put('retURL', Page.BatchEntry.getUrl());

@@ -3,6 +3,7 @@
     <types>
         <members>BulkDataEntry</members>
         <members>CTRL_BatchEntry</members>
+        <members>DescribeHelper</members>
         <name>ApexClass</name>
     </types>
     <types>
